@@ -27,8 +27,6 @@ if not HUGGINGFACE_API_KEY:
     st.error("❌ Hugging Face API key not found!")
     st.stop()
 
-#st.info("✅ API Key loaded | Your data stays private")
-
 # Initialize session state
 if "history" not in st.session_state:
     st.session_state.history = []
