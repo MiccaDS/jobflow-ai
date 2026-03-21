@@ -3,59 +3,97 @@ from litellm import completion
 from dotenv import load_dotenv
 import os
 
-#api han enkelt erstattes med en annen som x ai
-# Load environment variables from .env file
 load_dotenv()
 
-# ====================== CONFIG ======================
 st.set_page_config(
     page_title="JobFlow AI - Job Application Tailor",
     page_icon="🚀",
-    layout="centered"
+    layout="wide"
 )
+
+# Hide annoying anchor buttons
+st.markdown("""
+    <style>
+        .stApp h1 a, .stApp h2 a, .stApp h3 a, a.anchor-link { display: none !important; }
+    </style>
+""", unsafe_allow_html=True)
 
 st.title("🚀 JobFlow AI")
 st.subheader("Professional AI Job Application Tailoring Tool")
 
-# ====================== LOAD API KEY ======================
-#XAI_API_KEY
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
 if not HUGGINGFACE_API_KEY:
-    st.error("❌ API key not found!\n\n"
-             "Please create a `.env` file in the same folder as app.py with this line:\n"
-             "HUGGINGFACE_API_KEY=hf_YourActualKeyHere")
+    st.error("❌ Hugging Face API key not found!")
     st.stop()
 
-st.info("✅ API Key loaded from .env | Your data stays private")
+#st.info("✅ API Key loaded | Your data stays private")
 
-# ====================== INPUTS ======================
-master_cv = st.text_area(
-    "Paste your MASTER CV here",
-    height=300,
-    placeholder="Paste your full CV text..."
-)
+# Initialize session state
+if "history" not in st.session_state:
+    st.session_state.history = []
 
-job_description = st.text_area(
-    "Paste the JOB DESCRIPTION here",
-    height=200,
-    placeholder="Paste the full job posting..."
-)
+if "master_cv" not in st.session_state:
+    st.session_state.master_cv = ""
+if "job_desc" not in st.session_state:
+    st.session_state.job_desc = ""
+if "nice_to_have" not in st.session_state:
+    st.session_state.nice_to_have = ""
+if "selected_result" not in st.session_state:
+    st.session_state.selected_result = None
 
-nice_to_have = st.text_input(
-    "Nice to have (optional)",
-    placeholder="e.g. Banking experience, German B2, Startup background"
-)
+# ====================== SIDEBAR ======================
+with st.sidebar:
+    st.title("🚀 Tools")
+    tool = st.radio("Select Tool:", ["Job Application Tailor", "Cover Letter Writer", "Interview Prep", "Job Analysis"])
 
-# ====================== TAILOR BUTTON ======================
-if st.button("✨ Tailor My CV Now", type="primary", use_container_width=True):
-    if not master_cv.strip() or not job_description.strip():
-        st.warning("Please paste both your Master CV and the Job Description.")
-    else:
-        with st.spinner("Tailoring your application with huggingface... This may take 10-20 seconds"):
-            try:
-                prompt = f"""
-You are an expert career coach and Job application specialist.
+    st.divider()
+    if st.session_state.history:
+        st.subheader("Recent Applications")
+        for i, item in enumerate(reversed(st.session_state.history)):
+            if st.button(item["title"], key=f"load_{i}"):
+                st.session_state.master_cv = item["master_cv"]
+                st.session_state.job_desc = item["job_desc"]
+                st.session_state.nice_to_have = item["nice_to_have"]
+                st.session_state.selected_result = item["result"]
+                st.rerun()
+
+# ====================== MAIN AREA ======================
+if tool == "Job Application Tailor":
+    st.header("✨ Tailor My Job Application")
+
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        master_cv = st.text_area(
+            "Paste your MASTER CV here",
+            height=380,
+            value=st.session_state.master_cv,
+            key="master_cv_key"
+        )
+
+    with col2:
+        job_description = st.text_area(
+            "Paste the JOB DESCRIPTION here",
+            height=380,
+            value=st.session_state.job_desc,
+            key="job_desc_key"
+        )
+
+    nice_to_have = st.text_input(
+        "Nice to have (optional)",
+        value=st.session_state.nice_to_have,
+        key="nice_key"
+    )
+
+    if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
+        if not master_cv.strip() or not job_description.strip():
+            st.warning("Please paste both your Master CV and the Job Description.")
+        else:
+            with st.spinner("Crafting your tailored job application..."):
+                try:
+                    prompt = f"""
+You are an expert career coach and job application specialist.
 
 Master CV:
 {master_cv}
@@ -65,37 +103,70 @@ Job Description:
 
 Nice to have: {nice_to_have if nice_to_have else "None"}
 
-Task: Write a job application using the Master CV and Job Descriptionto perfectly match this job.
-- Make it concise, achievement-focused, and ATS-friendly.
-- Include relevant skills and experience that are given in the Master CV.
-- Use strong action verbs.
-- Keep the tone professional but natural.
-- Output ONLY the final tailored application in a clean professional format, no need for multiple titles or markdown-formatting.
+Task: Write a complete, professional job application.
+- Make it concise, targeted and achievement-focused
+- Highlight relevant skills from the Master CV
+- Use strong action verbs
+- Keep tone professional but natural
+- Output ONLY the final job application text.
 """
 
-                response = completion(
-                    #"xai/grok-3"
-                    model="huggingface/meta-llama/Meta-Llama-3-8B-Instruct",
-                    messages=[{"role": "user", "content": prompt}],
-                    api_key=HUGGINGFACE_API_KEY,
-                    temperature=0.7,
-                    max_tokens=2000
-                )
+                    response = completion(
+                        model="huggingface/meta-llama/Meta-Llama-3-8B-Instruct",
+                        messages=[{"role": "user", "content": prompt}],
+                        api_key=HUGGINGFACE_API_KEY,
+                        temperature=0.7,
+                        max_tokens=2200
+                    )
 
-                tailored_cv = response.choices[0].message.content
+                    result = response.choices[0].message.content
 
-                st.success("✅ Here's your tailored CV!")
-                st.markdown(tailored_cv)
+                    st.success("✅ Your Tailored Job Application is Ready!")
+                    st.markdown(result)
 
-                st.download_button(
-                    label="📥 Download Tailored CV",
-                    data=tailored_cv,
-                    file_name="Tailored_CV.md",
-                    mime="text/markdown"
-                )
+                    st.download_button(
+                        label="📥 Download Application",
+                        data=result,
+                        file_name="Tailored_Job_Application.txt",
+                        mime="text/plain"
+                    )
 
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+                    # Save to history
+                    st.session_state.history.append({
+                        "title": f"Application for: {job_description[:60]}...",
+                        "master_cv": master_cv,
+                        "job_desc": job_description,
+                        "nice_to_have": nice_to_have,
+                        "result": result
+                    })
 
-# Footer
-st.caption("Your data stays private • Powered by Huggingface + LiteLLM")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+
+    # Show previous result if selected
+    if st.session_state.selected_result:
+        st.divider()
+        st.header("📄 Previous Application")
+        st.markdown(st.session_state.selected_result)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Close Preview"):
+                st.session_state.selected_result = None
+                st.rerun()
+        with col2:
+            st.download_button(
+                "📥 Download This Version",
+                st.session_state.selected_result,
+                file_name="Previous_Application.txt",
+                mime="text/plain"
+            )
+
+else:
+    st.header(tool)
+    st.info(f"{tool} is coming soon...")
+
+# History count
+with st.sidebar:
+    if st.session_state.history:
+        st.caption(f"{len(st.session_state.history)} previous applications saved")
