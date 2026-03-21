@@ -1,50 +1,98 @@
 import streamlit as st
 from litellm import completion
-import os
 from dotenv import load_dotenv
+import os
 
-load_dotenv()  # loads your secret key from .env
+# Load environment variables from .env file
+load_dotenv()
 
-st.set_page_config(page_title="JobFlow AI", page_icon="🚀", layout="wide")
+# ====================== CONFIG ======================
+st.set_page_config(
+    page_title="JobFlow AI - CV Tailor",
+    page_icon="🚀",
+    layout="centered"
+)
+
 st.title("🚀 JobFlow AI")
 st.subheader("Professional AI CV Tailoring Tool")
-st.caption("Your data stays private • Built for real job hunters")
 
-# Input fields
-master_cv = st.text_area("Paste your MASTER CV here", height=350, placeholder="Full CV text...")
-job_desc = st.text_area("Paste the JOB DESCRIPTION here", height=250, placeholder="Full job posting...")
+# ====================== LOAD API KEY ======================
+xai_api_key = os.getenv("XAI_API_KEY")
 
+if not xai_api_key:
+    st.error("❌ API key not found!\n\n"
+             "Please create a `.env` file in the same folder as app.py with this line:\n"
+             "XAI_API_KEY=xai-YourActualKeyHere")
+    st.stop()
+
+st.info("✅ API Key loaded from .env | Your data stays private")
+
+# ====================== INPUTS ======================
+master_cv = st.text_area(
+    "Paste your MASTER CV here",
+    height=300,
+    placeholder="Paste your full CV text..."
+)
+
+job_description = st.text_area(
+    "Paste the JOB DESCRIPTION here",
+    height=200,
+    placeholder="Paste the full job posting..."
+)
+
+nice_to_have = st.text_input(
+    "Nice to have (optional)",
+    placeholder="e.g. Banking experience, German B2, Startup background"
+)
+
+# ====================== TAILOR BUTTON ======================
 if st.button("✨ Tailor My CV Now", type="primary", use_container_width=True):
-    if master_cv.strip() and job_desc.strip():
-        with st.spinner("AI is working... (10-30 seconds)"):
+    if not master_cv.strip() or not job_description.strip():
+        st.warning("Please paste both your Master CV and the Job Description.")
+    else:
+        with st.spinner("Tailoring your CV with Grok... This may take 10-20 seconds"):
             try:
+                prompt = f"""
+You are an expert career coach and CV writer.
+
+Master CV:
+{master_cv}
+
+Job Description:
+{job_description}
+
+Nice to have: {nice_to_have if nice_to_have else "None"}
+
+Task: Rewrite the CV to perfectly match this job.
+- Make it concise, achievement-focused, and ATS-friendly.
+- Highlight relevant skills and experience.
+- Use strong action verbs.
+- Keep the tone professional but natural.
+- Output ONLY the final tailored CV in clean markdown format.
+"""
+
                 response = completion(
-                    model="xai/grok-4-1-fast-reasoning",   # ← You can change to "xai/grok-4.20-reasoning" if you want
-                    messages=[{"role": "user", "content": f"""You are an expert resume writer. 
-                    Tailor the CV to perfectly match the job. 
-                    Keep the original achievements and the candidate's natural tone. 
-                    Make every bullet relevant and strong. Naturally include important keywords from the job.
-
-                    MASTER CV:
-                    {master_cv}
-
-                    JOB DESCRIPTION:
-                    {job_desc}"""}]
+                    model="xai/grok-3",
+                    messages=[{"role": "user", "content": prompt}],
+                    api_key=xai_api_key,
+                    temperature=0.7,
+                    max_tokens=2000
                 )
-                tailored = response.choices[0].message.content
-                
-                st.success("✅ Your professionally tailored CV is ready!")
-                st.markdown(tailored)
-                
-                # Fixed download button
+
+                tailored_cv = response.choices[0].message.content
+
+                st.success("✅ Here's your tailored CV!")
+                st.markdown(tailored_cv)
+
                 st.download_button(
                     label="📥 Download Tailored CV",
-                    data=tailored,
-                    file_name="tailored_cv.txt",
-                    use_container_width=True
+                    data=tailored_cv,
+                    file_name="Tailored_CV.md",
+                    mime="text/markdown"
                 )
-                
+
             except Exception as e:
                 st.error(f"Error: {str(e)}")
-    else:
-        st.warning("Please paste both your CV and the job description")
+
+# Footer
+st.caption("Your data stays private • Powered by Grok + LiteLLM")
