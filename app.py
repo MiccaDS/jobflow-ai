@@ -68,7 +68,7 @@ if "selected_result" not in st.session_state:
 # ====================== SIDEBAR ======================
 with st.sidebar:
     st.title("🚀 Tools")
-    tool = st.radio("Select Tool:", ["Job Application Tailor", "Cover Letter Writer", "Interview Prep", "Job Analysis"])
+    tool = st.radio("Select Tool:", ["Job Application Tailor", "Cv Enhancer", "Interview Prep"])
 
     st.divider()
     if st.session_state.history:
