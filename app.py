@@ -3,26 +3,28 @@ from litellm import completion
 from dotenv import load_dotenv
 import os
 
+#api han enkelt erstattes med en annen som x ai
 # Load environment variables from .env file
 load_dotenv()
 
 # ====================== CONFIG ======================
 st.set_page_config(
-    page_title="JobFlow AI - CV Tailor",
+    page_title="JobFlow AI - Job Application Tailor",
     page_icon="🚀",
     layout="centered"
 )
 
 st.title("🚀 JobFlow AI")
-st.subheader("Professional AI CV Tailoring Tool")
+st.subheader("Professional AI Job Application Tailoring Tool")
 
 # ====================== LOAD API KEY ======================
-xai_api_key = os.getenv("XAI_API_KEY")
+#XAI_API_KEY
+HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
-if not xai_api_key:
+if not HUGGINGFACE_API_KEY:
     st.error("❌ API key not found!\n\n"
              "Please create a `.env` file in the same folder as app.py with this line:\n"
-             "XAI_API_KEY=xai-YourActualKeyHere")
+             "HUGGINGFACE_API_KEY=hf_YourActualKeyHere")
     st.stop()
 
 st.info("✅ API Key loaded from .env | Your data stays private")
@@ -50,10 +52,10 @@ if st.button("✨ Tailor My CV Now", type="primary", use_container_width=True):
     if not master_cv.strip() or not job_description.strip():
         st.warning("Please paste both your Master CV and the Job Description.")
     else:
-        with st.spinner("Tailoring your CV with Grok... This may take 10-20 seconds"):
+        with st.spinner("Tailoring your application with huggingface... This may take 10-20 seconds"):
             try:
                 prompt = f"""
-You are an expert career coach and CV writer.
+You are an expert career coach and Job application specialist.
 
 Master CV:
 {master_cv}
@@ -63,18 +65,19 @@ Job Description:
 
 Nice to have: {nice_to_have if nice_to_have else "None"}
 
-Task: Rewrite the CV to perfectly match this job.
+Task: Write a job application using the Master CV and Job Descriptionto perfectly match this job.
 - Make it concise, achievement-focused, and ATS-friendly.
-- Highlight relevant skills and experience.
+- Include relevant skills and experience that are given in the Master CV.
 - Use strong action verbs.
 - Keep the tone professional but natural.
-- Output ONLY the final tailored CV in clean markdown format.
+- Output ONLY the final tailored application in a clean professional format, no need for multiple titles or markdown-formatting.
 """
 
                 response = completion(
-                    model="xai/grok-3",
+                    #"xai/grok-3"
+                    model="huggingface/meta-llama/Meta-Llama-3-8B-Instruct",
                     messages=[{"role": "user", "content": prompt}],
-                    api_key=xai_api_key,
+                    api_key=HUGGINGFACE_API_KEY,
                     temperature=0.7,
                     max_tokens=2000
                 )
@@ -95,4 +98,4 @@ Task: Rewrite the CV to perfectly match this job.
                 st.error(f"Error: {str(e)}")
 
 # Footer
-st.caption("Your data stays private • Powered by Grok + LiteLLM")
+st.caption("Your data stays private • Powered by Huggingface + LiteLLM")
