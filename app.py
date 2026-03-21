@@ -11,6 +11,31 @@ st.set_page_config(
     layout="wide"
 )
 
+# ====================== CUSTOM CSS - Make primary button dark/black ======================
+st.markdown("""
+    <style>
+        /* Make the primary button dark/black with nice hover effect */
+        div.stButton > button[kind="primary"] {
+            background-color: #0f0f0f !important;   /* Very dark black */
+            color: #ffffff !important;
+            border: 1px solid #444444 !important;
+            font-weight: 600;
+        }
+        
+        div.stButton > button[kind="primary"]:hover {
+            background-color: #1a1a1a !important;   /* Slightly lighter on hover */
+            border-color: #666666 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Optional: make it look even more premium */
+        div.stButton > button[kind="primary"] {
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Hide annoying anchor buttons
 st.markdown("""
     <style>
@@ -58,13 +83,13 @@ with st.sidebar:
 
 # ====================== MAIN AREA ======================
 if tool == "Job Application Tailor":
-    st.header("✨ Tailor My Job Application")
-
+    
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
         master_cv = st.text_area(
             "Paste your MASTER CV here",
+            placeholder="Paste your full CV text...",
             height=380,
             value=st.session_state.master_cv,
             key="master_cv_key"
@@ -73,16 +98,18 @@ if tool == "Job Application Tailor":
     with col2:
         job_description = st.text_area(
             "Paste the JOB DESCRIPTION here",
+            placeholder="Paste the full job posting...",
             height=380,
             value=st.session_state.job_desc,
             key="job_desc_key"
         )
 
     nice_to_have = st.text_input(
-        "Nice to have (optional)",
+        "Nice to have (optional)", placeholder="e.g. Banking experience, German B2, Startup background",
         value=st.session_state.nice_to_have,
         key="nice_key"
     )
+    
 
     if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
         if not master_cv.strip() or not job_description.strip():
@@ -101,12 +128,12 @@ Job Description:
 
 Nice to have: {nice_to_have if nice_to_have else "None"}
 
-Task: Write a complete, professional job application.
+Task: Write a complete, professional job application using the Master CV and Job Description.
 - Make it concise, targeted and achievement-focused
-- Highlight relevant skills from the Master CV
+- Highlight the most relevant skills and experience
 - Use strong action verbs
-- Keep tone professional but natural
-- Output ONLY the final job application text.
+- Keep the tone professional but natural
+- Output ONLY the final job application text. No titles, no markdown, no explanations.
 """
 
                     response = completion(
