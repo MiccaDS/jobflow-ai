@@ -133,7 +133,7 @@ Task: Write a complete, professional job application using the Master CV and Job
 - Highlight the most relevant skills and experience
 - Use strong action verbs
 - Keep the tone professional but natural
-- Output ONLY the final job application text. No titles, no markdown, no explanations.
+- Output ONLY the final job application text. No titles, no markdown formatting, no lists, no explanations.
 """
 
                     response = completion(
