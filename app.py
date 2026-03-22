@@ -129,10 +129,10 @@ Job Description:
 Nice to have: {nice_to_have if nice_to_have else "None"}
 
 Task: Write a complete, professional job application using the Master CV and Job Description.
-- Make it concise, targeted and achievement-focused
-- Highlight the most relevant skills and experience
-- Use strong action verbs
-- Keep the tone professional but natural
+- Make it concise, targeted, achievement-focused and ATS-friendly.
+- Highlight relevant skills and experience.
+- Use strong action verbs.
+- Keep the tone professional but natural.
 - Output ONLY the final job application text. No titles, no markdown formatting, no lists, no explanations.
 """
 
