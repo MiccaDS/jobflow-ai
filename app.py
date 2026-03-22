@@ -43,8 +43,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🚀 JobFlow AI")
-st.subheader("Professional AI Job Application Tailoring Tool")
+
+st.subheader("The Job Application Optimizer")
 
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
 
@@ -67,7 +67,7 @@ if "selected_result" not in st.session_state:
 
 # ====================== SIDEBAR ======================
 with st.sidebar:
-    st.title("🚀 Tools")
+    st.title("🚀 JobFlow AI")
     tool = st.radio("Select Tool:", ["Job Application Tailor", "Cv Enhancer", "Interview Prep"])
 
     st.divider()
