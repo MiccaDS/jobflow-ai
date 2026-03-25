@@ -128,7 +128,7 @@ Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 
 Regler du MÅ følge:
 - Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
-- Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv
+- Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv, prøv å unngå flere adjektiv etter hverandre.
 - Lengde ca. 300–500 ord.
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
 - Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
