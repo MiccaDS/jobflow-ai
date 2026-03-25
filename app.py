@@ -11,43 +11,31 @@ st.set_page_config(
     layout="wide"
 )
 
-
+# Custom styling
 st.markdown("""
     <style>
-        /* Make the primary button dark/black with nice hover effect */
         div.stButton > button[kind="primary"] {
-            background-color: #0f0f0f !important;   /* Very dark black */
+            background-color: #0f0f0f !important;
             color: #ffffff !important;
             border: 1px solid #444444 !important;
             font-weight: 600;
-        }
-        
-        div.stButton > button[kind="primary"]:hover {
-            background-color: #1a1a1a !important;   /* Slightly lighter on hover */
-            border-color: #666666 !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Optional: make it look even more premium */
-        div.stButton > button[kind="primary"] {
             border-radius: 10px;
             padding: 0.75rem 1.5rem;
         }
+        div.stButton > button[kind="primary"]:hover {
+            background-color: #1a1a1a !important;
+            border-color: #666666 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .stApp h1 a, .stApp h2 a, .stApp h3 a, a.anchor-link { 
+            display: none !important; 
+        }
     </style>
 """, unsafe_allow_html=True)
-
-# Hide annoying anchor buttons
-st.markdown("""
-    <style>
-        .stApp h1 a, .stApp h2 a, .stApp h3 a, a.anchor-link { display: none !important; }
-    </style>
-""", unsafe_allow_html=True)
-
 
 st.subheader("The Job Application Optimizer")
 
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
-
 if not HUGGINGFACE_API_KEY:
     st.error("❌ Hugging Face API key not found!")
     st.stop()
@@ -55,7 +43,6 @@ if not HUGGINGFACE_API_KEY:
 # Initialize session state
 if "history" not in st.session_state:
     st.session_state.history = []
-
 if "master_cv" not in st.session_state:
     st.session_state.master_cv = ""
 if "job_desc" not in st.session_state:
@@ -65,12 +52,12 @@ if "nice_to_have" not in st.session_state:
 if "selected_result" not in st.session_state:
     st.session_state.selected_result = None
 
-
+# Sidebar
 with st.sidebar:
     st.title("🚀 JobFlow AI")
     tool = st.radio("Select Tool:", ["Job Application Tailor", "Cv Enhancer", "Interview Prep"])
-
     st.divider()
+
     if st.session_state.history:
         st.subheader("Recent Applications")
         for i, item in enumerate(reversed(st.session_state.history)):
@@ -81,36 +68,10 @@ with st.sidebar:
                 st.session_state.selected_result = item["result"]
                 st.rerun()
 
-
+# ====================== JOB APPLICATION TAILOR ======================
 if tool == "Job Application Tailor":
     
     col1, col2 = st.columns(2, gap="large")
-
-    with col1:
-        master_cv = st.text_area(
-            "Paste your MASTER CV here",
-            placeholder="Paste your full CV text...",
-            height=380,
-            value=st.session_state.master_cv,
-            key="master_cv_key"
-        )
-
-    with col2:
-        job_description = st.text_area(
-            "Paste the JOB DESCRIPTION here",
-            placeholder="Paste the full job posting...",
-            height=380,
-            value=st.session_state.job_desc,
-            key="job_desc_key"
-        )
-
-    nice_to_have = st.text_input(
-        "Nice to have (optional)", placeholder="e.g. Banking experience, German B2, Startup background",
-        value=st.session_state.nice_to_have,
-        key="nice_key"
-    )
-    if tool == "Job Application Tailor":
-    col1, col2 = st.columns(2, gap="large")
     with col1:
         master_cv = st.text_area(
             "Paste your MASTER CV here",
@@ -128,7 +89,7 @@ if tool == "Job Application Tailor":
             key="job_desc_key"
         )
 
-    # Ny rad for språkvalg + nice to have
+    # Språkvalg + Nice to have
     col_lang, col_nice = st.columns([1, 2])
     with col_lang:
         language = st.selectbox(
@@ -146,14 +107,15 @@ if tool == "Job Application Tailor":
             key="nice_key"
         )
 
-        if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
+    # Generate button
+    if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
         if not master_cv.strip() or not job_description.strip():
             st.warning("Please paste both your Master CV and the Job Description.")
         else:
             with st.spinner("Crafting your tailored job application..."):
                 try:
                     if language == "Norsk (bokmål)":
-                        prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning. 
+                        prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning.
 Skriv en profesjonell, naturlig og målrettet jobbsøknad på **norsk bokmål** basert på dette:
 
 MASTER CV:
@@ -201,7 +163,6 @@ Rules you MUST follow:
 Write the final job application now:
 """
 
-                    # Bruk en modell som fungerer (Llama-3.1-8B-Instruct er stabil på HF Inference)
                     response = completion(
                         model="huggingface/meta-llama/Llama-3.1-8B-Instruct",
                         messages=[{"role": "user", "content": prompt}],
@@ -216,7 +177,6 @@ Write the final job application now:
                     st.success(f"✅ Your tailored {'norske' if language == 'Norsk (bokmål)' else 'English'} application is ready!")
                     st.markdown(result)
                     
-                    # Download button med riktig filnavn
                     file_name = f"Tailored_Application_{'NO' if language == 'Norsk (bokmål)' else 'EN'}.txt"
                     st.download_button(
                         label="📥 Download Application",
@@ -238,12 +198,11 @@ Write the final job application now:
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
 
-    # Show previous result if selected
+    # Show previous result if selected from sidebar
     if st.session_state.selected_result:
         st.divider()
         st.header("📄 Previous Application")
         st.markdown(st.session_state.selected_result)
-
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Close Preview"):
@@ -261,8 +220,7 @@ else:
     st.header(tool)
     st.info(f"{tool} is coming soon...")
 
-# History 
+# Footer info in sidebar
 with st.sidebar:
     if st.session_state.history:
         st.caption(f"{len(st.session_state.history)} previous applications saved")
-
