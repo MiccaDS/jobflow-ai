@@ -129,7 +129,7 @@ Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 **Viktige regler du MÅ følge strengt:**
 - Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
 - Bruk **riktig norsk tegnsetting** i henhold til gjeldende norske komma-regler (2020-reformen).
-- Unngå unødvendige komma, men sett alltid komma ved oppramsing, innskudd og innledende ledd.
+- Unngå unødvendige komma
 - Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv, prøv å unngå flere adjektiv etter hverandre.
 - Lengde ca. 300–500 ord.
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
