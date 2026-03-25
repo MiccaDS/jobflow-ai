@@ -132,7 +132,7 @@ Regler du MÅ følge:
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
 - Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
 - Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
-- Avslutt positivt med "vennlig hilsen, [navn] og hvorfor du passer godt for stillingen og at du gjerne tar en prat.
+- Avslutt positivt med "vennlig hilsen, [navn]" (navn er en linje under "vennlig hilsen") og hvorfor du passer godt for stillingen og at du gjerne tar en prat.
 - Skriv i første person ("jeg").
 - Kun ren tekst – ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer.
 
