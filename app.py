@@ -128,11 +128,12 @@ Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 
 Regler du MÅ følge:
 - Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
+- Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv
 - Lengde ca. 300–500 ord.
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
 - Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
 - Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
-- Avslutt positivt med "vennlig hilsen, [navn]" (navn ligger under linjen med vennlig hilsen, på slutten) og hvorfor du passer godt for stillingen og at du gjerne tar en prat.
+- Avslutt positivt med og hvorfor du passer godt for stillingen og at du gjerne tar en prat.
 - Skriv i første person ("jeg").
 - Kun ren tekst – ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer.
 
