@@ -143,7 +143,7 @@ Skriv nå den ferdige søknaden:
 """
 
                     response = completion(
-                        model="huggingface/norallm/normistral-11b-thinking",   # eller normistral-7b-warm-instruct
+                        model="huggingface/Qwen/Qwen2.5-14B-Instruct",   # eller normistral-7b-warm-instruct
                         messages=[{"role": "user", "content": prompt}],
                         api_key=HUGGINGFACE_API_KEY,
                         temperature=0.6,      # 0.5–0.7 er best for jobbsøknader
