@@ -130,6 +130,7 @@ Regler du MÅ følge:
 - Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
 - Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv, prøv å unngå flere adjektiv etter hverandre.
 - Lengde ca. 300–500 ord.
+- Pass på å bruke tegnsetting riktig 
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
 - Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
 - Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
