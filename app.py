@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ====================== CUSTOM CSS - Make primary button dark/black ======================
+
 st.markdown("""
     <style>
         /* Make the primary button dark/black with nice hover effect */
@@ -65,7 +65,7 @@ if "nice_to_have" not in st.session_state:
 if "selected_result" not in st.session_state:
     st.session_state.selected_result = None
 
-# ====================== SIDEBAR ======================
+
 with st.sidebar:
     st.title("🚀 JobFlow AI")
     tool = st.radio("Select Tool:", ["Job Application Tailor", "Cv Enhancer", "Interview Prep"])
@@ -81,7 +81,7 @@ with st.sidebar:
                 st.session_state.selected_result = item["result"]
                 st.rerun()
 
-# ====================== MAIN AREA ======================
+
 if tool == "Job Application Tailor":
     
     col1, col2 = st.columns(2, gap="large")
@@ -191,7 +191,7 @@ else:
     st.header(tool)
     st.info(f"{tool} is coming soon...")
 
-# History count
+# History 
 with st.sidebar:
     if st.session_state.history:
         st.caption(f"{len(st.session_state.history)} previous applications saved")
