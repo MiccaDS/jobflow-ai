@@ -109,16 +109,52 @@ if tool == "Job Application Tailor":
         value=st.session_state.nice_to_have,
         key="nice_key"
     )
-    
+    if tool == "Job Application Tailor":
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        master_cv = st.text_area(
+            "Paste your MASTER CV here",
+            placeholder="Paste your full CV text...",
+            height=380,
+            value=st.session_state.master_cv,
+            key="master_cv_key"
+        )
+    with col2:
+        job_description = st.text_area(
+            "Paste the JOB DESCRIPTION here",
+            placeholder="Paste the full job posting...",
+            height=380,
+            value=st.session_state.job_desc,
+            key="job_desc_key"
+        )
 
-    if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
+    # Ny rad for språkvalg + nice to have
+    col_lang, col_nice = st.columns([1, 2])
+    with col_lang:
+        language = st.selectbox(
+            "Language for the application",
+            options=["Norsk (bokmål)", "English"],
+            index=0,  # Default = Norsk
+            key="language_key"
+        )
+    
+    with col_nice:
+        nice_to_have = st.text_input(
+            "Nice to have (optional)",
+            placeholder="e.g. Banking experience, German B2, Startup background",
+            value=st.session_state.nice_to_have,
+            key="nice_key"
+        )
+
+        if st.button("✨ Tailor My Job Application Now", type="primary", use_container_width=True):
         if not master_cv.strip() or not job_description.strip():
             st.warning("Please paste both your Master CV and the Job Description.")
         else:
             with st.spinner("Crafting your tailored job application..."):
                 try:
-                    prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning. 
-Skriv en profesjonell, naturlig og målrettet jobbsøknad på **norsk** (bokmål) basert på følgende:
+                    if language == "Norsk (bokmål)":
+                        prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning. 
+Skriv en profesjonell, naturlig og målrettet jobbsøknad på **norsk bokmål** basert på dette:
 
 MASTER CV:
 {master_cv}
@@ -126,50 +162,77 @@ MASTER CV:
 STILLINGSBESKRIVELSE:
 {job_description}
 
-Nice to have / ekstra ønsket kompetanse: {nice_to_have if nice_to_have else "Ingen"}
+Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 
-Regler for søknaden:
-- Skriv på naturlig, profesjonelt norsk (ikke stivt eller oversatt-engelsk).
-- Hold den konsis (ca. 250–400 ord).
-- Start med en kort og engasjerende innledning som viser motivasjon for akkurat denne stillingen.
-- Trekk frem 3–4 mest relevante erfaringer/kompetanser og koble dem direkte til kravene i stillingsannonsen.
-- Bruk konkrete resultater og handlingsverb (utviklet, økte, bidro til, ledet osv.).
-- Avslutt med hvorfor du passer godt og at du gjerne tar en prat.
-- Bruk "jeg" og skriv i første person.
-- Ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer. Bare ren søknadstekst.
-- Tilpass tonen til en norsk arbeidsgiver: direkte, ydmyk, samarbeidsorientert og positiv.
+Regler du MÅ følge:
+- Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
+- Lengde ca. 300–420 ord.
+- Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
+- Trekk frem 3–4 mest relevante erfaringer og koble dem direkte til kravene i annonsen.
+- Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
+- Avslutt positivt med hvorfor du passer godt og at du gjerne tar en prat.
+- Skriv i første person ("jeg").
+- Kun ren tekst – ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer.
 
 Skriv nå den ferdige søknaden:
 """
+                    else:  # English
+                        prompt = f"""You are an expert career coach and job application specialist.
+Write a professional, natural and targeted job application in **English** based on this:
 
+MASTER CV:
+{master_cv}
+
+JOB DESCRIPTION:
+{job_description}
+
+Nice to have: {nice_to_have if nice_to_have else "None"}
+
+Rules you MUST follow:
+- Natural, professional and fluent English.
+- Length approx. 280–400 words.
+- Start with a short, engaging introduction showing why you are applying for this specific position.
+- Highlight 3–4 most relevant experiences and link them directly to the requirements in the job ad.
+- Use concrete achievements and strong action verbs.
+- End positively with why you are a good fit and that you would welcome a conversation.
+- Write in first person ("I").
+- Only clean text – no headings, no markdown, no bullet points, no explanations.
+
+Write the final job application now:
+"""
+
+                    # Bruk en modell som fungerer (Llama-3.1-8B-Instruct er stabil på HF Inference)
                     response = completion(
-                        model="huggingface/meta-llama/Llama-3.1-8B-Instruct",   # eller normistral-7b-warm-instruct
+                        model="huggingface/meta-llama/Llama-3.1-8B-Instruct",
                         messages=[{"role": "user", "content": prompt}],
                         api_key=HUGGINGFACE_API_KEY,
-                        temperature=0.6,      # 0.5–0.7 er best for jobbsøknader
+                        temperature=0.6,
                         max_tokens=1800,
                         top_p=0.95
                     )
-
-                    result = response.choices[0].message.content
-
-                    st.success("✅ Your Tailored Job Application is Ready!")
+                    
+                    result = response.choices[0].message.content.strip()
+                    
+                    st.success(f"✅ Your tailored {'norske' if language == 'Norsk (bokmål)' else 'English'} application is ready!")
                     st.markdown(result)
-
+                    
+                    # Download button med riktig filnavn
+                    file_name = f"Tailored_Application_{'NO' if language == 'Norsk (bokmål)' else 'EN'}.txt"
                     st.download_button(
                         label="📥 Download Application",
                         data=result,
-                        file_name="Tailored_Job_Application.txt",
+                        file_name=file_name,
                         mime="text/plain"
                     )
-
+                    
                     # Save to history
                     st.session_state.history.append({
-                        "title": f"Application for: {job_description[:60]}...",
+                        "title": f"Application for: {job_description[:60]}... ({'NO' if language == 'Norsk (bokmål)' else 'EN'})",
                         "master_cv": master_cv,
                         "job_desc": job_description,
                         "nice_to_have": nice_to_have,
-                        "result": result
+                        "result": result,
+                        "language": language
                     })
 
                 except Exception as e:
