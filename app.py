@@ -126,11 +126,12 @@ STILLINGSBESKRIVELSE:
 
 Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 
-Regler du MÅ følge:
+**Viktige regler du MÅ følge strengt:**
 - Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
+- Bruk **riktig norsk tegnsetting** i henhold til gjeldende norske komma-regler (2020-reformen).
+- Unngå unødvendige komma, men sett alltid komma ved oppramsing, innskudd og innledende ledd.
 - Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv, prøv å unngå flere adjektiv etter hverandre.
 - Lengde ca. 300–500 ord.
-- Du må bruke tegnsetting som "," og "." på riktig måte.
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
 - Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
 - Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
