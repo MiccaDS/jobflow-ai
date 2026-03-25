@@ -68,7 +68,6 @@ with st.sidebar:
                 st.session_state.selected_result = item["result"]
                 st.rerun()
 
-# ====================== JOB APPLICATION TAILOR ======================
 if tool == "Job Application Tailor":
     
     col1, col2 = st.columns(2, gap="large")
@@ -115,7 +114,8 @@ if tool == "Job Application Tailor":
             with st.spinner("Crafting your tailored job application..."):
                 try:
                     if language == "Norsk (bokmål)":
-                        prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning.
+                        prompt = f"""Du er en ekspert på norske jobbsøknader med perfekt beherskelse av norsk grammatikk, stil og tegnsetting.
+
 Skriv en profesjonell, naturlig og målrettet jobbsøknad på **norsk bokmål** basert på dette:
 
 MASTER CV:
@@ -127,17 +127,19 @@ STILLINGSBESKRIVELSE:
 Nice to have: {nice_to_have if nice_to_have else "Ingen"}
 
 **Viktige regler du MÅ følge strengt:**
-- Naturlig og flytende norsk (ikke stivt eller oversatt-engelsk).
-- Bruk **riktig norsk tegnsetting** i henhold til gjeldende norske komma-regler (2020-reformen).
-- Unngå unødvendige komma
-- Bruk ord som passer best, skriv på en måte som er naturlig i det norske språk, ikke overdriv, prøv å unngå flere adjektiv etter hverandre.
-- Lengde ca. 300–500 ord.
+
+- Skriv naturlig, flytende og profesjonelt norsk – unngå stivt oversatt-engelsk og unaturlige formuleringer.
+- Bruk **riktig norsk tegnsetting** i henhold til gjeldende norske komma-regler (2020-reformen). Les gjennom teksten til slutt og korriger alle komma.
+- Unngå unødvendige komma. Sett komma der det trengs for å skille setninger, ved oppramsing og innskudd, men ikke ellers.
+- Bruk ord og uttrykk som høres naturlige ut på norsk. Unngå å stable flere adjektiv etter hverandre (f.eks. unngå "strukturert, lærevillig, aktiv og sosial" – velg de viktigste).
+- Hold søknaden på ca. 320–480 ord.
 - Start med en kort, engasjerende innledning som viser hvorfor du søker akkurat denne stillingen.
-- Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i annonsen.
-- Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet osv.).
-- Avslutt positivt med "Vennlig hilsen, [navn]" og hvorfor du passer godt for stillingen og at du gjerne tar en prat.
-- Skriv i første person ("jeg").
-- Kun ren tekst – ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer.
+- Trekk frem de mest relevante erfaringene og koble dem direkte til kravene i stillingsannonsen.
+- Bruk konkrete resultater og sterke handlingsverb (bidro til, utviklet, økte, ledet, håndterte osv.).
+- Avslutt positivt med hvorfor du passer godt for stillingen og at du gjerne tar en prat.
+- Skriv alltid i første person ("jeg").
+- Avslutt med: "Vennlig hilsen" etterfulgt av navnet ditt på en ny linje.
+- Kun ren tekst – ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer eller kommentarer.
 
 Skriv nå den ferdige søknaden:
 """
