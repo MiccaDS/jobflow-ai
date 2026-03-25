@@ -117,31 +117,38 @@ if tool == "Job Application Tailor":
         else:
             with st.spinner("Crafting your tailored job application..."):
                 try:
-                    prompt = f"""
-You are an expert career coach and job application specialist.
+                    prompt = f"""Du er en ekspert på norske jobbsøknader og karriererådgivning. 
+Skriv en profesjonell, naturlig og målrettet jobbsøknad på **norsk** (bokmål) basert på følgende:
 
-Master CV:
+MASTER CV:
 {master_cv}
 
-Job Description:
+STILLINGSBESKRIVELSE:
 {job_description}
 
-Nice to have: {nice_to_have if nice_to_have else "None"}
+Nice to have / ekstra ønsket kompetanse: {nice_to_have if nice_to_have else "Ingen"}
 
-Task: Write a complete, professional job application using the Master CV and Job Description.
-- Make it concise, targeted, achievement-focused and ATS-friendly.
-- Highlight relevant skills and experience.
-- Use strong action verbs.
-- Keep the tone professional but natural.
-- Output ONLY the final job application text. No titles, no markdown formatting, no lists, no explanations.
+Regler for søknaden:
+- Skriv på naturlig, profesjonelt norsk (ikke stivt eller oversatt-engelsk).
+- Hold den konsis (ca. 250–400 ord).
+- Start med en kort og engasjerende innledning som viser motivasjon for akkurat denne stillingen.
+- Trekk frem 3–4 mest relevante erfaringer/kompetanser og koble dem direkte til kravene i stillingsannonsen.
+- Bruk konkrete resultater og handlingsverb (utviklet, økte, bidro til, ledet osv.).
+- Avslutt med hvorfor du passer godt og at du gjerne tar en prat.
+- Bruk "jeg" og skriv i første person.
+- Ingen overskrifter, ingen markdown, ingen bullet points, ingen forklaringer. Bare ren søknadstekst.
+- Tilpass tonen til en norsk arbeidsgiver: direkte, ydmyk, samarbeidsorientert og positiv.
+
+Skriv nå den ferdige søknaden:
 """
 
                     response = completion(
-                        model="huggingface/meta-llama/Meta-Llama-3-8B-Instruct",
+                        model="huggingface/norallm/normistral-11b-thinking",   # eller normistral-7b-warm-instruct
                         messages=[{"role": "user", "content": prompt}],
                         api_key=HUGGINGFACE_API_KEY,
-                        temperature=0.7,
-                        max_tokens=2200
+                        temperature=0.6,      # 0.5–0.7 er best for jobbsøknader
+                        max_tokens=1800,
+                        top_p=0.95
                     )
 
                     result = response.choices[0].message.content
@@ -195,3 +202,4 @@ else:
 with st.sidebar:
     if st.session_state.history:
         st.caption(f"{len(st.session_state.history)} previous applications saved")
+
