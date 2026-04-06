@@ -2,7 +2,7 @@ import streamlit as st
 from litellm import completion
 from dotenv import load_dotenv
 import os
-#test
+#testing
 load_dotenv()
 
 st.set_page_config(
